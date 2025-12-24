@@ -160,14 +160,6 @@ HAVING
 
 <hr />
 
-<h2>📊 Sample Output</h2>
-<p>
-Expected outputs for all queries can be found in the
-<strong>QUERY.md</strong> file.
-</p>
-
-<hr />
-
 <h2>🎯 Key SQL Concepts Demonstrated</h2>
 <ul>
   <li>Relational joins</li>
