@@ -1,82 +1,80 @@
-🚗 Vehicle Rental System – SQL Queries Documentation
-📌 Project Overview
+<h1>🚗 Vehicle Rental System – SQL Queries Documentation</h1>
 
-This project demonstrates core SQL querying concepts using a Vehicle Rental System database.
-The schema is designed around three primary entities:
+<hr />
 
-Users (customers)
+<h2>📌 Project Overview</h2>
+<p>
+This project demonstrates core <strong>SQL querying concepts</strong> using a
+<strong>Vehicle Rental System</strong> database.
+The schema is designed around three main entities:
+</p>
 
-Vehicles
+<ul>
+  <li><strong>Users</strong> (Customers)</li>
+  <li><strong>Vehicles</strong></li>
+  <li><strong>Bookings</strong></li>
+</ul>
 
-Bookings
+<p>
+The goal of this project is to retrieve meaningful information from the database
+using standard SQL techniques such as
+<strong>JOIN</strong>, <strong>WHERE</strong>, <strong>NOT EXISTS</strong>,
+<strong>GROUP BY</strong>, and <strong>HAVING</strong>.
+</p>
 
-The objective is to retrieve meaningful insights from the database using standard SQL techniques such as JOIN, WHERE, NOT EXISTS, GROUP BY, and HAVING.
+<hr />
 
-This project follows traditional relational database principles while keeping queries clean, readable, and scalable — the right way to do SQL.
+<h2>🗂️ Database Tables Used</h2>
 
-🗂️ Database Tables Used
-users
+<h3>👤 users</h3>
+<ul>
+  <li><code>user_id</code> (Primary Key)</li>
+  <li><code>user_name</code></li>
+  <li><code>email</code></li>
+  <li><code>phone</code></li>
+  <li><code>role</code></li>
+</ul>
 
-Stores customer information.
+<h3>🚘 vehicles</h3>
+<ul>
+  <li><code>vehicle_id</code> (Primary Key)</li>
+  <li><code>vehicle_name</code></li>
+  <li><code>type</code></li>
+  <li><code>availability_status</code></li>
+</ul>
 
-user_id (PK)
+<h3>📅 bookings</h3>
+<ul>
+  <li><code>booking_id</code> (Primary Key)</li>
+  <li><code>user_id</code> (Foreign Key → users)</li>
+  <li><code>vehicle_id</code> (Foreign Key → vehicles)</li>
+  <li><code>start_date</code></li>
+  <li><code>end_date</code></li>
+  <li><code>status</code></li>
+</ul>
 
-user_name
+<hr />
 
-email
+<h2>📁 Project Structure</h2>
 
-phone
-
-role
-
-vehicles
-
-Stores vehicle details.
-
-vehicle_id (PK)
-
-vehicle_name
-
-type
-
-availability_status
-
-bookings
-
-Stores booking records.
-
-booking_id (PK)
-
-user_id (FK → users)
-
-vehicle_id (FK → vehicles)
-
-start_date
-
-end_date
-
-status
-
-📄 File Structure
+<pre>
 ├── README.md
 ├── queries.sql
-├── QUERY.md   (Sample Input/Output reference)
+└── QUERY.md   (Sample Input / Output reference)
+</pre>
 
-🧠 SQL Queries Explanation (queries.sql)
-✅ Query 1: Retrieve Booking Information with Customer & Vehicle Names
+<hr />
 
-Concepts Used: INNER JOIN
+<h2>🧠 SQL Queries Explanation</h2>
 
-This query fetches booking details along with:
+<h3>✅ Query 1: Booking Information with Customer & Vehicle Name</h3>
+<p><strong>Concepts Used:</strong> INNER JOIN</p>
 
-Customer name
+<p>
+This query retrieves booking information along with the customer name and vehicle name.
+</p>
 
-Vehicle name
-
-Booking duration
-
-Booking status
-
+<pre>
 SELECT
   booking_id,
   user_name AS "customer_name",
@@ -88,17 +86,18 @@ FROM
   bookings
 INNER JOIN users ON bookings.user_id = users.user_id
 INNER JOIN vehicles ON bookings.vehicle_id = vehicles.vehicle_id;
+</pre>
 
+<hr />
 
-📌 Why INNER JOIN?
-Only records that exist in all related tables are returned — exactly what we want for valid bookings.
+<h3>✅ Query 2: Vehicles That Have Never Been Booked</h3>
+<p><strong>Concepts Used:</strong> NOT EXISTS</p>
 
-✅ Query 2: Find Vehicles That Have Never Been Booked
+<p>
+This query finds all vehicles that do not have any booking records.
+</p>
 
-Concepts Used: NOT EXISTS
-
-This query returns all vehicles that do not appear in the bookings table.
-
+<pre>
 SELECT
   *
 FROM
@@ -114,17 +113,19 @@ WHERE
   )
 ORDER BY
   vehicle_id ASC;
+</pre>
 
+<hr />
 
-📌 Why NOT EXISTS?
-It’s the cleanest and safest way to detect missing relationships without false matches.
+<h3>✅ Query 3: Available Vehicles of a Specific Type</h3>
+<p><strong>Concepts Used:</strong> SELECT, WHERE</p>
 
-✅ Query 3: Retrieve Available Vehicles of a Specific Type
+<p>
+This query retrieves all available vehicles filtered by a specific type
+(example: bike).
+</p>
 
-Concepts Used: SELECT, WHERE
-
-This query retrieves all available vehicles filtered by a specific type (example: bike).
-
+<pre>
 SELECT
   *
 FROM
@@ -132,17 +133,19 @@ FROM
 WHERE
   availability_status = 'available'
   AND type = 'bike';
+</pre>
 
+<hr />
 
-📌 Use Case:
-Perfect for search filters in real rental applications.
+<h3>✅ Query 4: Vehicles with More Than 2 Bookings</h3>
+<p><strong>Concepts Used:</strong> GROUP BY, HAVING, COUNT</p>
 
-✅ Query 4: Find Vehicles with More Than 2 Bookings
+<p>
+This query calculates the total number of bookings per vehicle and
+displays only those with more than two bookings.
+</p>
 
-Concepts Used: GROUP BY, HAVING, COUNT
-
-This query calculates the total number of bookings per vehicle and shows only those booked more than twice.
-
+<pre>
 SELECT
   vehicle_name,
   COUNT(booking_id) AS "total_bookings"
@@ -153,23 +156,34 @@ GROUP BY
   vehicle_name
 HAVING
   COUNT(booking_id) > 2;
+</pre>
 
+<hr />
 
-📌 Why HAVING instead of WHERE?
-Because filtering happens after aggregation, not before — classic SQL rule.
+<h2>📊 Sample Output</h2>
+<p>
+Expected outputs for all queries can be found in the
+<strong>QUERY.md</strong> file.
+</p>
 
-📊 Sample Output
+<hr />
 
-For expected outputs of each query, please refer to the QUERY.md file included in the project.
+<h2>🎯 Key SQL Concepts Demonstrated</h2>
+<ul>
+  <li>Relational joins</li>
+  <li>Subqueries with EXISTS / NOT EXISTS</li>
+  <li>Conditional filtering</li>
+  <li>Data aggregation</li>
+  <li>GROUP BY and HAVING clauses</li>
+</ul>
 
-🎯 Key SQL Concepts Demonstrated
+<hr />
 
-Relational joins
+<h2>🚀 Final Notes</h2>
+<p>
+This project follows traditional relational database design principles and
+demonstrates real-world SQL usage.
+It is suitable for academic submission, practice, and interview preparation.
+</p>
 
-Subqueries with EXISTS
-
-Conditional filtering
-
-Data aggregation
-
-Constraint-safe querying
+<p><strong>Clean SQL. Strong fundamentals. Future-ready skills.</strong></p>
